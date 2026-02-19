@@ -1,6 +1,7 @@
 const postModel = require("../models/post.model");
 const Imagekit = require("@imagekit/nodejs");
 const { toFile } = require("@imagekit/nodejs");
+const likeModel = require("../models/like.model");
 
 // Create ImageKit instance using private key from .env file
 const imagekit = new Imagekit({
@@ -74,8 +75,82 @@ async function getPostDetailsController(req, res) {
   });
 }
 
+// Controller to like a post
+async function likePostController(req, res) {
+  const username = req.user.username;
+  const postId = req.params.postId;
+
+  // Check if post exists
+  const post = await postModel.findById(postId);
+  if (!post) {
+    return res.status(404).json({
+      message: "Post not found",
+    });
+  }
+
+  // Find like record for this user and post
+  const like = await likeModel.findOne({
+    post: postId,
+    user: username,
+  });
+
+  // If user has already liked this post
+  if (like) {
+    return res.status(400).json({
+      message: "User already liked this post",
+    });
+  }
+
+  // Create like record for this user and post
+  const likePost = await likeModel.create({
+    post: postId,
+    user: username,
+  });
+
+  res.status(201).json({
+    message: "Post Liked",
+    likePost,
+  });
+}
+
+// Controller to unlike a post
+async function unlikePostController(req, res) {
+  const username = req.user.username;
+  const postId = req.params.postId;
+
+  // Check if post exists
+  const post = await postModel.findById(postId);
+  if (!post) {
+    return res.status(404).json({
+      message: "Post not found",
+    });
+  }
+
+  // Find like record for this user and post
+  const like = await likeModel.findOne({
+    post: postId,
+    user: username,
+  });
+
+  // If user has not liked this post
+  if (!like) {
+    return res.status(400).json({
+      message: "User not liked this post",
+    });
+  }
+
+  // Delete the like record (unlike)
+  await likeModel.findByIdAndDelete(like._id);
+
+  res.status(200).json({
+    message: "Post Unliked",
+  });
+}
+
 module.exports = {
   createPostController,
   getPostController,
   getPostDetailsController,
+  likePostController,
+  unlikePostController,
 };

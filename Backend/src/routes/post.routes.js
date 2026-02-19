@@ -23,4 +23,18 @@ postRouter.get(
   postController.getPostDetailsController,
 );
 
+// Route to like a post by postId
+postRouter.post(
+  "/like/:postId",
+  identifyUser,
+  postController.likePostController,
+);
+
+// Route to unlike a post by postId
+postRouter.post(
+  "/unlike/:postId",
+  identifyUser,
+  postController.unlikePostController,
+);
+
 module.exports = postRouter;
