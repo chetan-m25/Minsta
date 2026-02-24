@@ -8,10 +8,22 @@ export const usePost = () => {
   const { loading, setLoading, post, feed, setFeed } = context;
 
   const handleGetFeed = async () => {
-    setLoading(true);
-    const data = await getFeed();
-    setFeed(data.posts);
-    setLoading(false);
+    try {
+      setLoading(true);
+
+      const data = await getFeed();
+
+      if (data?.unauthorized) {
+        setFeed(null);
+        return;
+      }
+
+      setFeed(data.posts);
+    } catch (error) {
+      console.error("Error fetching feed:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return {

@@ -6,6 +6,15 @@ const api = axios.create({
 });
 
 export async function getFeed() {
-  const response = await api.get("/posts/feed");
-  return response.data;
+  try {
+    const response = await api.get("/posts/feed");
+
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      return { unauthorized: true };
+    }
+
+    throw error;
+  }
 }
