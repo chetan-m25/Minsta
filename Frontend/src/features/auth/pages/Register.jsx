@@ -1,10 +1,9 @@
-import { Link } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const { user, loading, handleRegister } = useAuth();
+  const { loading, handleRegister } = useAuth();
 
   const navigate = useNavigate();
 
