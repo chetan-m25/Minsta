@@ -37,4 +37,7 @@ postRouter.post(
   postController.unlikePostController,
 );
 
+// Private Route to get all posts from DB for loggedIn user
+postRouter.get("/feed", identifyUser, postController.getFeedController);
+
 module.exports = postRouter;

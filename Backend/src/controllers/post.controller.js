@@ -21,7 +21,7 @@ async function createPostController(req, res) {
   const post = await postModel.create({
     caption: req.body.caption,
     imageUrl: file.url,
-    user: req.user.username,
+    user: req.user.id,
   });
 
   res.status(201).json({
@@ -33,11 +33,11 @@ async function createPostController(req, res) {
 // Get all posts of loggedIn user after verifying JWT token
 async function getPostController(req, res) {
   // Extract user ID from decoded token
-  const username = req.user.username;
+  const userId = req.user.id;
 
   // Find all posts created by this user
   const posts = await postModel.find({
-    user: username,
+    user: userId,
   });
 
   res.status(200).json({
@@ -48,7 +48,7 @@ async function getPostController(req, res) {
 
 // Get single post details if user is authorized
 async function getPostDetailsController(req, res) {
-  const username = req.user.username;
+  const userId = req.user.id;
   const postId = req.params.postId;
 
   // Find post by its ID
@@ -62,7 +62,7 @@ async function getPostDetailsController(req, res) {
   }
 
   // Allow only if post belongs to loggedIn user
-  const isValidUser = post.user === username;
+  const isValidUser = post.user.toString() === userId;
   if (!isValidUser) {
     return res.status(403).json({
       message: "Forbidden Content",
@@ -147,10 +147,46 @@ async function unlikePostController(req, res) {
   });
 }
 
+// Controller to get feed of all posts with like status for loggedIn user
+async function getFeedController(req, res) {
+  const user = req.user;
+
+  // Use Promise.all to wait for all posts to be processed with like status
+  const posts = await Promise.all(
+    (
+      await postModel
+        .find() // Fetch all posts
+        .populate("user") // Populate user details for each post
+        .lean() // Convert Mongoose documents to plain JavaScript objects
+        .sort({ createdAt: -1 })
+    ) // Sort posts by creation date in descending order
+
+      // Map over each post to check if the loggedIn user has liked it
+      .map(async (post) => {
+        // Check if loggedIn user has liked this post
+        const isLiked = await likeModel.findOne({
+          user: user.username,
+          post: post._id,
+        });
+
+        // Add isLiked property to post object
+        post.isLiked = Boolean(isLiked);
+
+        return post; // Return the modified post object
+      }),
+  );
+
+  res.status(200).json({
+    message: "Posts Fetched Successfully",
+    posts,
+  });
+}
+
 module.exports = {
   createPostController,
   getPostController,
   getPostDetailsController,
   likePostController,
   unlikePostController,
+  getFeedController,
 };

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// Create schema (structure) for users collection
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -14,6 +15,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Password is required"],
+    select: false, // Don't return password field by default when querying user data from DB
   },
 
   bio: String,
