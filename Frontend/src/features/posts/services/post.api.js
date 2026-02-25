@@ -18,3 +18,11 @@ export async function getFeed() {
     throw error;
   }
 }
+
+export async function likePost(postId) {
+  return api.post(`/posts/like/${postId}`);
+}
+
+export async function unlikePost(postId) {
+  return api.post(`/posts/unlike/${postId}`);
+}

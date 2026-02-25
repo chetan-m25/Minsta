@@ -163,13 +163,17 @@ async function getFeedController(req, res) {
 
       // Map over each post to check if the loggedIn user has liked it
       .map(async (post) => {
+        // count total likes
+        const likesCount = await likeModel.countDocuments({ post: post._id });
+
         // Check if loggedIn user has liked this post
         const isLiked = await likeModel.findOne({
           user: user.username,
           post: post._id,
         });
 
-        // Add isLiked property to post object
+        // Add likesCount count and isLiked property to post object
+        post.likesCount = likesCount;
         post.isLiked = Boolean(isLiked);
 
         return post; // Return the modified post object
