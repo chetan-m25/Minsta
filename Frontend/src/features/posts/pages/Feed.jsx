@@ -3,6 +3,7 @@ import Post from "../components/Post";
 import { usePost } from "../hooks/usePost";
 import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
+import Navbar from "../../shared/components/Navbar";
 
 const Feed = () => {
   const { loading, feed, handleGetFeed } = usePost();
@@ -25,6 +26,7 @@ const Feed = () => {
 
   return (
     <main className="feed-page">
+      <Navbar />
       <div className="feed">
         <div className="posts">
           {feed.map((post) => {

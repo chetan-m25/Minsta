@@ -1,0 +1,109 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  padding: 1rem 4rem;
+  background-color: #1f1f1f;
+  margin-bottom: 1rem;
+
+  .logo {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: white;
+    cursor: pointer;
+  }
+
+  .right {
+    display: flex;
+    align-items: center;
+    gap: 1.8rem;
+
+    button {
+      background: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      position: relative;
+    }
+
+    .nav-icon {
+      font-size: 1.75rem;
+      color: white;
+      transition: all 0.2s ease;
+    }
+
+    .nav-icon:hover {
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
+
+    .profile-btn img {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 50%;
+      object-fit: cover;
+      transition: transform 0.2s ease;
+    }
+
+    .profile-btn img:hover {
+      transform: scale(1.1);
+    }
+
+    .tooltip span {
+      position: absolute;
+      bottom: -2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      padding: 0.4rem 0.8rem;
+      border-radius: 5px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.2s ease;
+      color: white;
+    }
+    .tooltip:hover span {
+      opacity: 1;
+    }
+  }
+}
+
+@media (max-width: 800px) {
+  .navbar {
+    padding: 0.8rem 1rem;
+
+    .logo {
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+    }
+
+    .right {
+      gap: 1rem;
+
+      .nav-icon {
+        font-size: 1.4rem;
+      }
+
+      .profile-btn img {
+        width: 1.8rem;
+        height: 1.8rem;
+      }
+
+      .tooltip span {
+        font-size: 0.6rem;
+        padding: 0.3rem 0.6rem;
+      }
+    }
+  }
+}

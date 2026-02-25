@@ -62,7 +62,7 @@ const Post = ({ user, post }) => {
             <i className="ri-chat-3-line icon"></i>
           </button>
           <button>
-            <i class="ri-send-ins-line icon"></i>
+            <i className="ri-send-ins-line icon"></i>
           </button>
         </div>
         <div className="right">
