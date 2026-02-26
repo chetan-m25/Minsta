@@ -29,8 +29,8 @@ const Feed = () => {
       <Navbar />
       <div className="feed">
         <div className="posts">
-          {feed.map((post) => {
-            return <Post user={post.user} post={post} />;
+          {feed.map((post, id) => {
+            return <Post key={id} user={post.user} post={post} />;
           })}
         </div>
       </div>
