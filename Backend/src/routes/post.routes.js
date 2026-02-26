@@ -2,13 +2,30 @@ const express = require("express");
 const postRouter = express.Router();
 const postController = require("../controllers/post.controller");
 const multer = require("multer");
-const upload = multer({ storage: multer.memoryStorage() });
 const identifyUser = require("../middlewares/auth.middleware");
+const uploadErrorHandler = require("../middlewares/uploadError.middleware");
+
+// Configure multer for file uploads
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+  // Filter to allow only image files
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith("image/")) {
+      cb(new Error("Only image files are allowed"));
+    } else {
+      cb(null, true);
+    }
+  },
+});
 
 // Route to create a post with single image upload
 postRouter.post(
   "/",
   upload.single("image"), // Upload one image from form field named "image"
+  uploadErrorHandler,
   identifyUser,
   postController.createPostController, // Call controller to handle post creation
 );

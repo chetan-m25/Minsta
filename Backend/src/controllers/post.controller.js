@@ -10,6 +10,13 @@ const imagekit = new Imagekit({
 
 // Controller to create a new post
 async function createPostController(req, res) {
+  // Check if file is uploaded
+  if (!req.file) {
+    return res.status(400).json({
+      message: "Please upload an image",
+    });
+  }
+
   // Upload image file to ImageKit
   const file = await imagekit.files.upload({
     file: await toFile(Buffer.from(req.file.buffer), "file"),
