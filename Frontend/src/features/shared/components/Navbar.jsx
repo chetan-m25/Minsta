@@ -1,24 +1,10 @@
-import { useEffect, useState } from "react";
-import "../style/navbar.scss";
-import { getMe } from "../../auth/services/auth.api";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../auth/hooks/useAuth";
+import "../style/navbar.scss";
 
 const Navbar = () => {
-  const [user, setUser] = useState(null);
-
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await getMe();
-        setUser(res.user);
-      } catch (error) {
-        console.log("Failed to load user", error);
-      }
-    };
-    fetchUser();
-  }, []);
+  const { user } = useAuth();
 
   return (
     <nav className="navbar">
