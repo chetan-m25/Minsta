@@ -1,8 +1,25 @@
-.post-image-label {
-  background-color: #fff;
-  color: black;
-  padding-inline: 1rem;
-  padding-block: 0.5rem;
-  border-radius: 1rem;
-  cursor: pointer;
+.select-image {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .post-image-label {
+    background-color: #fff;
+    width: fit-content;
+    color: black;
+    padding-inline: 0.75rem;
+    padding-block: 0.25rem;
+    border-radius: 1rem;
+    cursor: pointer;
+  }
+}
+
+.upload-info {
+  font-size: 14px;
+  color: rgb(120, 120, 120);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

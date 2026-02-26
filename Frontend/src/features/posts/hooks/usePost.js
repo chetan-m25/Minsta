@@ -27,12 +27,22 @@ export const usePost = () => {
   };
 
   const handleCreatePost = async (imageFile, caption) => {
-    setLoading(true);
+    try {
+      setLoading(true);
+      const data = await createPost(imageFile, caption);
+      setFeed((prevFeed) =>
+        prevFeed ? [data.post, ...prevFeed] : [data.post],
+      );
 
-    const data = await createPost(imageFile, caption);
-    setFeed([data.post, ...feed]);
-
-    setLoading(false);
+      return { success: true, message: "Post uploaded successfully" };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message || "Uploading failed",
+      };
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
