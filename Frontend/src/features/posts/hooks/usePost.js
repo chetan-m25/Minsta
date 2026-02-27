@@ -5,6 +5,9 @@ import {
   getFeed,
   likePost,
   unlikePost,
+  savePost,
+  unsavePost,
+  deletePost,
 } from "../services/post.api";
 
 export const usePost = () => {
@@ -74,6 +77,42 @@ export const usePost = () => {
     }
   };
 
+  const handleToggleSave = async (postId, isSaved) => {
+    try {
+      if (isSaved) {
+        await unsavePost(postId);
+      } else {
+        await savePost(postId);
+      }
+
+      setFeed((prevFeed) => {
+        return prevFeed.map((post) => {
+          if (post._id !== postId) return post;
+
+          return {
+            ...post,
+            isSaved: !isSaved,
+          };
+        });
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeletePost = async (postId) => {
+    try {
+      await deletePost(postId);
+      setFeed((prevFeed) => prevFeed.filter((post) => post._id !== postId));
+      return { success: true, message: "Post deleted successfully" };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message || "Failed to delete post",
+      };
+    }
+  };
+
   return {
     loading,
     feed,
@@ -81,5 +120,7 @@ export const usePost = () => {
     handleGetFeed,
     handleCreatePost,
     handleToggleLike,
+    handleDeletePost,
+    handleToggleSave,
   };
 };

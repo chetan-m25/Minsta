@@ -1,12 +1,21 @@
-import "../style/feed.scss";
-import Post from "../components/Post";
-import Navbar from "../../shared/components/Navbar";
-import { usePost } from "../hooks/usePost";
 import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../../auth/hooks/useAuth";
+import Navbar from "../../shared/components/Navbar";
+import Post from "../components/Post";
+import { usePost } from "../hooks/usePost";
+import "../style/feed.scss";
 
 const Feed = () => {
-  const { loading, feed, handleGetFeed, handleToggleLike } = usePost();
+  const {
+    loading,
+    feed,
+    handleGetFeed,
+    handleToggleLike,
+    handleDeletePost,
+    handleToggleSave,
+  } = usePost();
+  const { user: loggedInUser } = useAuth();
 
   useEffect(() => {
     handleGetFeed();
@@ -36,6 +45,9 @@ const Feed = () => {
                 user={post.user}
                 post={post}
                 handleToggleLike={handleToggleLike}
+                loggedInUser={loggedInUser}
+                handleDeletePost={handleDeletePost}
+                handleToggleSave={handleToggleSave}
               />
             );
           })}

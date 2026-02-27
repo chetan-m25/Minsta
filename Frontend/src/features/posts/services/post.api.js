@@ -36,3 +36,17 @@ export async function createPost(imageFile, caption) {
 
   return response.data;
 }
+
+export async function savePost(postId) {
+  return api.post(`/posts/save/${postId}`);
+}
+
+export async function unsavePost(postId) {
+  return api.post(`/posts/unsave/${postId}`);
+}
+
+export async function deletePost(postId) {
+  const response = await api.delete(`/posts/${postId}`);
+
+  return response.data;
+}
