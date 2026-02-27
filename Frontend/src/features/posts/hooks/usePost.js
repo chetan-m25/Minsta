@@ -1,6 +1,11 @@
-import { useContext, useEffect } from "react";
-import { PostContext } from "../context/CreatePostContext";
-import { getFeed, createPost } from "../services/post.api";
+import { useContext } from "react";
+import { PostContext } from "../context/post.context";
+import {
+  createPost,
+  getFeed,
+  likePost,
+  unlikePost,
+} from "../services/post.api";
 
 export const usePost = () => {
   const context = useContext(PostContext);
@@ -45,9 +50,29 @@ export const usePost = () => {
     }
   };
 
-  useEffect(() => {
-    handleGetFeed();
-  }, []);
+  const handleToggleLike = async (postId, isLiked) => {
+    try {
+      if (isLiked) {
+        await unlikePost(postId);
+      } else {
+        await likePost(postId);
+      }
+
+      setFeed((prevFeed) => {
+        return prevFeed.map((post) => {
+          if (post._id !== postId) return post;
+
+          return {
+            ...post,
+            isLiked: !isLiked,
+            likesCount: isLiked ? post.likesCount - 1 : post.likesCount + 1,
+          };
+        });
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return {
     loading,
@@ -55,5 +80,6 @@ export const usePost = () => {
     post,
     handleGetFeed,
     handleCreatePost,
+    handleToggleLike,
   };
 };

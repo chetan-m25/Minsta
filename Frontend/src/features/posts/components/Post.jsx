@@ -1,34 +1,22 @@
 import { useState } from "react";
-import { likePost, unlikePost } from "../services/post.api";
 
-const Post = ({ user, post }) => {
+const Post = ({ user, post, handleToggleLike }) => {
   const [liked, setLiked] = useState(post.isLiked);
   const [likesCount, setLikesCount] = useState(post.likesCount);
   const [showBigHeart, setShowBigHeart] = useState(false);
 
   const handleLike = async () => {
-    try {
-      if (liked) {
-        setLiked(false);
-        setLikesCount((prev) => prev - 1);
+    setLiked(!liked);
+    setLikesCount((prev) => (liked ? prev - 1 : prev + 1));
 
-        await unlikePost(post._id);
-      } else {
-        setLiked(true);
-        setLikesCount((prev) => prev + 1);
-
-        await likePost(post._id);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    await handleToggleLike(post._id, liked);
   };
 
   const handleDoubleClick = async () => {
     if (!liked) {
       setLiked(true);
       setLikesCount((prev) => prev + 1);
-      await likePost(post._id);
+      await handleToggleLike(post._id, false);
     }
 
     setShowBigHeart(true);

@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { PostContext } from "./CreatePostContext";
+import { createContext, useState } from "react";
+
+export const PostContext = createContext();
 
 export const PostContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
