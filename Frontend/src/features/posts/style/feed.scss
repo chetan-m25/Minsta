@@ -35,6 +35,24 @@
           border-radius: 50%;
         }
 
+        .post-time {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+
+          .post-time-dot {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.65rem;
+            line-height: 1;
+            user-select: none;
+          }
+
+          .time-ago {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+          }
+        }
+
         .delete-btn {
           background: none;
           border: none;

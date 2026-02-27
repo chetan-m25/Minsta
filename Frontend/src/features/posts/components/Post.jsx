@@ -1,6 +1,25 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 
+const getTimeAgo = (createdAt) => {
+  if (!createdAt) return "";
+  const created = new Date(createdAt);
+  if (Number.isNaN(created.getTime())) return "";
+  const diffMs = Date.now() - created.getTime();
+  const diffSeconds = Math.floor(diffMs / 1000);
+  if (diffSeconds < 60) return `${diffSeconds || 1}s`;
+  const diffMinutes = Math.floor(diffSeconds / 60);
+  if (diffMinutes < 60) return `${diffMinutes}m`;
+  const diffHours = Math.floor(diffMinutes / 60);
+  if (diffHours < 24) return `${diffHours}h`;
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays < 30) return `${diffDays}d`;
+  const diffMonths = Math.floor(diffDays / 30);
+  if (diffMonths < 12) return `${diffMonths || 1}mo`;
+  const diffYears = Math.floor(diffMonths / 12);
+  return `${diffYears || 1}y`;
+};
+
 const Post = ({
   user,
   post,
@@ -69,11 +88,23 @@ const Post = ({
     post.user?._id != null &&
     String(loggedInUser._id) === String(post.user._id);
 
+  const timeAgo = getTimeAgo(post.createdAt);
+
   return (
     <div className="post">
       <div className="user">
         <img src={user.profileImage} alt="" />
         <p>{user.username}</p>
+        <div className="post-time">
+          {timeAgo && (
+            <>
+              <span className="post-time-dot" aria-hidden="true">
+                •
+              </span>
+              <span className="time-ago">{timeAgo}</span>
+            </>
+          )}
+        </div>
         {isOwnPost && (
           <button className="delete-btn" onClick={openDeleteModal}>
             <i className="ri-delete-bin-line"></i>
