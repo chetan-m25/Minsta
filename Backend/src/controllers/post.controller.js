@@ -2,6 +2,7 @@ const postModel = require("../models/post.model");
 const Imagekit = require("@imagekit/nodejs");
 const { toFile } = require("@imagekit/nodejs");
 const likeModel = require("../models/like.model");
+const saveModel = require("../models/save.model");
 
 // Create ImageKit instance using private key from .env file
 const imagekit = new Imagekit({
@@ -179,9 +180,16 @@ async function getFeedController(req, res) {
           post: post._id,
         });
 
-        // Add likesCount count and isLiked property to post object
+        // count saved state for this user
+        const isSaved = await saveModel.findOne({
+          user: user.username,
+          post: post._id,
+        });
+
+        // Add likesCount count, isLiked and isSaved property to post object
         post.likesCount = likesCount;
         post.isLiked = Boolean(isLiked);
+        post.isSaved = Boolean(isSaved);
 
         return post; // Return the modified post object
       }),
@@ -193,6 +201,105 @@ async function getFeedController(req, res) {
   });
 }
 
+// Controller to save a post (bookmark)
+async function savePostController(req, res) {
+  const username = req.user.username;
+  const postId = req.params.postId;
+
+  const post = await postModel.findById(postId);
+  if (!post) {
+    return res.status(404).json({
+      message: "Post not found",
+    });
+  }
+
+  const alreadySaved = await saveModel.findOne({
+    post: postId,
+    user: username,
+  });
+
+  if (alreadySaved) {
+    return res.status(400).json({
+      message: "Post already saved",
+    });
+  }
+
+  const savedPost = await saveModel.create({
+    post: postId,
+    user: username,
+  });
+
+  res.status(201).json({
+    message: "Post saved Successfully",
+    savedPost,
+  });
+}
+
+// Controller to unsave a post (remove bookmark)
+async function unsavePostController(req, res) {
+  const username = req.user.username;
+  const postId = req.params.postId;
+
+  const post = await postModel.findById(postId);
+  if (!post) {
+    return res.status(404).json({
+      message: "Post not found",
+    });
+  }
+
+  const saved = await saveModel.findOne({
+    post: postId,
+    user: username,
+  });
+
+  if (!saved) {
+    return res.status(400).json({
+      message: "Post not saved",
+    });
+  }
+
+  await saveModel.findByIdAndDelete(saved._id);
+
+  res.status(200).json({
+    message: "Post unsaved successfully",
+  });
+}
+
+// Controller to delete a post
+async function deletePostController(req, res) {
+  const userId = req.user.id;
+  const postId = req.params.postId;
+
+  // Find post by its ID
+  const post = await postModel.findById(postId);
+
+  // If post does not exist, return 404 error
+  if (!post) {
+    return res.status(404).json({
+      message: "Post not found",
+    });
+  }
+
+  // Allow only if post belongs to loggedIn user
+  const isValidUser = post.user.toString() === userId;
+  if (!isValidUser) {
+    return res.status(403).json({
+      message: "You can only delete your own posts",
+    });
+  }
+
+  // Delete the post
+  await postModel.findByIdAndDelete(postId);
+
+  // Delete all likes and saves associated with this post
+  await likeModel.deleteMany({ post: postId });
+  await saveModel.deleteMany({ post: postId });
+
+  res.status(200).json({
+    message: "Post deleted successfully",
+  });
+}
+
 module.exports = {
   createPostController,
   getPostController,
@@ -200,4 +307,7 @@ module.exports = {
   likePostController,
   unlikePostController,
   getFeedController,
+  savePostController,
+  unsavePostController,
+  deletePostController,
 };
