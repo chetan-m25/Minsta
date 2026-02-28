@@ -4,52 +4,65 @@ import { useAuth } from "../hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const { loading, handleLogin } = useAuth();
+  const { handleLogin } = useAuth();
 
-  const [username, setUsername] = useState("");
+  const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    await handleLogin(username, password);
-    navigate("/");
+    setErrorMessage("");
+    setIsLoggingIn(true);
+    const result = await handleLogin(emailOrUsername, password);
+    setIsLoggingIn(false);
+    if (result.success) {
+      navigate("/");
+    } else {
+      setErrorMessage(result.message);
+    }
   };
-
-  if (loading) {
-    return (
-      <main>
-        <h1>Loading...</h1>
-      </main>
-    );
-  }
 
   return (
     <main>
       <div className="form-container">
         <h1>Login</h1>
         <form onSubmit={handleSubmit}>
+          {errorMessage && (
+            <p className="form-error" role="alert">
+              {errorMessage}
+            </p>
+          )}
           <input
-            onInput={(e) => {
-              setUsername(e.target.value);
-            }}
+            value={emailOrUsername}
+            onInput={(e) => setEmailOrUsername(e.target.value)}
             type="text"
-            name="username"
-            id="username"
-            placeholder="Enter username"
+            name="emailOrUsername"
+            id="emailOrUsername"
+            placeholder="Email or username"
+            autoComplete="username"
+            disabled={isLoggingIn}
           />
           <input
-            onInput={(e) => {
-              setPassword(e.target.value);
-            }}
-            type="text"
+            value={password}
+            onInput={(e) => setPassword(e.target.value)}
+            type="password"
             name="password"
             id="password"
             placeholder="Enter password"
+            autoComplete="current-password"
+            disabled={isLoggingIn}
           />
-          <button className="button primary-button">Login</button>
+          <button
+            type="submit"
+            className="button primary-button"
+            disabled={isLoggingIn}
+          >
+            {isLoggingIn ? "Logging..." : "Login"}
+          </button>
           <p>
             Don't have an account ? <Link to={"/register"}>Create One</Link>
           </p>

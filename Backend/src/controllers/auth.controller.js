@@ -2,9 +2,27 @@ const userModel = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+const MIN_PASSWORD_LENGTH = 5;
+const MAX_PASSWORD_LENGTH = 15;
+
+function validatePasswordLength(password) {
+  if (!password || password.length < MIN_PASSWORD_LENGTH) {
+    return { valid: false, message: "Password must be at least 5 characters" };
+  }
+  if (password.length > MAX_PASSWORD_LENGTH) {
+    return { valid: false, message: "Password must not exceed 15 characters" };
+  }
+  return { valid: true };
+}
+
 // Controller for user registration
 async function registerController(req, res) {
   const { username, email, password, bio, profileImage } = req.body;
+
+  const passwordCheck = validatePasswordLength(password);
+  if (!passwordCheck.valid) {
+    return res.status(400).json({ message: passwordCheck.message });
+  }
 
   // Check if user already exists with same username OR email
   const isUserExists = await userModel.findOne({
@@ -46,10 +64,13 @@ async function registerController(req, res) {
 
   res.status(201).json({
     message: "User Registered Successfully",
-    username: user.username,
-    email: user.email,
-    bio: user.bio,
-    profileImage: user.profileImage,
+    user: {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      bio: user.bio,
+      profileImage: user.profileImage,
+    },
   });
 }
 

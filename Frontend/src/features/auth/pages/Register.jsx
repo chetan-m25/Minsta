@@ -1,64 +1,77 @@
+import "../style/form.scss";
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const { loading, handleRegister } = useAuth();
+  const { handleRegister } = useAuth();
 
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    await handleRegister(username, email, password);
-    navigate("/");
+    setErrorMessage("");
+    if (password.length < 5) {
+      setErrorMessage("Password must be at least 5 characters");
+      return;
+    }
+    if (password.length > 15) {
+      setErrorMessage("Password must not exceed 15 characters");
+      return;
+    }
+    const result = await handleRegister(username, email, password);
+    if (result.success) {
+      navigate("/");
+    } else {
+      setErrorMessage(result.message);
+    }
   };
-
-  if (loading) {
-    return (
-      <main>
-        <h1>Loading...</h1>
-      </main>
-    );
-  }
 
   return (
     <main>
       <div className="form-container">
         <h1>Register</h1>
         <form onSubmit={handleSubmit}>
+          {errorMessage && (
+            <p className="form-error" role="alert">
+              {errorMessage}
+            </p>
+          )}
           <input
-            onInput={(e) => {
-              setUsername(e.target.value);
-            }}
+            value={username}
+            onInput={(e) => setUsername(e.target.value)}
             type="text"
             name="username"
             id="username"
             placeholder="Enter username"
+            autoComplete="username"
           />
           <input
-            onInput={(e) => {
-              setEmail(e.target.value);
-            }}
-            type="text"
+            value={email}
+            onInput={(e) => setEmail(e.target.value)}
+            type="email"
             name="email"
             id="email"
             placeholder="Enter email address"
+            autoComplete="email"
           />
           <input
-            onInput={(e) => {
-              setPassword(e.target.value);
-            }}
-            type="text"
+            value={password}
+            onInput={(e) => setPassword(e.target.value)}
+            type="password"
             name="password"
             id="password"
-            placeholder="Enter password"
+            placeholder="Enter password (5-15 characters)"
+            autoComplete="new-password"
           />
-          <button className="button primary-button">Register</button>
+          <button type="submit" className="button primary-button">
+            Register
+          </button>
           <p>
             Already have an account ? <Link to={"/login"}>Login now</Link>
           </p>

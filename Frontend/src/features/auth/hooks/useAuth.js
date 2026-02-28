@@ -7,24 +7,35 @@ export const useAuth = () => {
 
   const { user, setUser, loading, setLoading } = context;
 
-  const handleLogin = async (username, password) => {
+  const handleLogin = async (identifier, password) => {
     setLoading(true);
-
-    const response = await login(username, password);
-
-    setUser(response.user);
-
-    setLoading(false);
+    try {
+      const response = await login(identifier, password);
+      setUser(response.user);
+      return { success: true };
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Login failed. Please try again.";
+      return { success: false, message };
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleRegister = async (username, email, password) => {
     setLoading(true);
-
-    const response = await register(username, email, password);
-
-    setUser(response.user);
-
-    setLoading(false);
+    try {
+      const response = await register(username, email, password);
+      if (response.user) setUser(response.user);
+      return { success: true };
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        "Registration failed. Please try again.";
+      return { success: false, message };
+    } finally {
+      setLoading(false);
+    }
   };
 
   return {
