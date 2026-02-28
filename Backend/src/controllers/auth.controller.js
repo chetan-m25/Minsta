@@ -9,8 +9,8 @@ const FOUR_DAYS_MS = 4 * 24 * 60 * 60 * 1000;
 function getTokenCookieOptions() {
   return {
     httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
+    secure: true,
     maxAge: FOUR_DAYS_MS,
     path: "/",
   };
@@ -161,8 +161,8 @@ async function getMeController(req, res) {
 async function logoutController(req, res) {
   res.clearCookie("token", {
     httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
+    secure: true,
     path: "/",
   });
 
