@@ -27,44 +27,45 @@ const Login = () => {
   };
 
   return (
-    <main>
+    <main className="auth-page">
+      {" "}
       <div className="form-container">
-        <h1>Login</h1>
+        <div className="form-header">
+          <h1>Welcome Back!</h1>
+          <p>Login to your account</p>
+        </div>
+
         <form onSubmit={handleSubmit}>
           {errorMessage && (
             <p className="form-error" role="alert">
               {errorMessage}
             </p>
           )}
+
           <input
             value={emailOrUsername}
             onInput={(e) => setEmailOrUsername(e.target.value)}
             type="text"
-            name="emailOrUsername"
-            id="emailOrUsername"
             placeholder="Email or username"
             autoComplete="username"
             disabled={isLoggingIn}
           />
+
           <input
             value={password}
             onInput={(e) => setPassword(e.target.value)}
             type="password"
-            name="password"
-            id="password"
             placeholder="Enter password"
             autoComplete="current-password"
             disabled={isLoggingIn}
           />
-          <button
-            type="submit"
-            className="button primary-button"
-            disabled={isLoggingIn}
-          >
-            {isLoggingIn ? "Logging..." : "Login"}
+
+          <button type="submit" disabled={isLoggingIn}>
+            {isLoggingIn ? "Logging..." : "Sign In"}
           </button>
-          <p>
-            Don't have an account ? <Link to={"/register"}>Create One</Link>
+
+          <p className="redirect-text">
+            Don't have an account? <Link to="/register">Create One</Link>
           </p>
         </form>
       </div>

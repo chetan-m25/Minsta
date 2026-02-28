@@ -4,34 +4,138 @@
   gap: $gap;
 }
 
-main {
+.auth-page {
   min-height: 100vh;
   width: 100%;
-
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
 
-  .form-container {
-    @include flex-column(1rem);
-    min-width: 400px;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+    url("https://images.pexels.com/photos/2098428/pexels-photo-2098428.jpeg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  font-family: "Segoe UI", sans-serif;
+}
+
+.form-container {
+  @include flex-column(1.5rem);
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem 2rem;
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+  position: relative;
+}
+
+.form-header {
+  text-align: center;
+
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: #ffffff;
   }
 
-  form {
-    @include flex-column(1rem);
+  p {
+    margin-top: 0.4rem;
+    font-size: 0.9rem;
+    color: #e5e5e5;
+  }
+}
 
-    .form-error {
-      margin: 0;
-      color: #ff6b6b;
-      font-size: 0.9rem;
+form {
+  @include flex-column(1.2rem);
+
+  .form-error {
+    background: rgba(255, 0, 0, 0.15);
+    padding: 0.6rem;
+    border-radius: 8px;
+    color: #ff6b6b;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  input {
+    padding: 0.9rem 1rem;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    outline: none;
+    font-size: 0.9rem;
+
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+
+    transition: 0.3s ease;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.7);
     }
 
-    input {
-      border: none;
-      outline: none;
-      padding-inline: 1rem;
-      padding-block: 0.5rem;
-      border-radius: 1rem;
+    &:focus {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.6);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
     }
+  }
+
+  button {
+    padding: 0.9rem;
+    border-radius: 50px;
+    border: none;
+
+    background: rgba(255, 255, 255, 0.9);
+    color: #111;
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .redirect-text {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #e5e5e5;
+
+    a {
+      color: #ffffff;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .form-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .form-header h1 {
+    font-size: 1.6rem;
   }
 }

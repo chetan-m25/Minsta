@@ -29,7 +29,19 @@ export async function register(username, email, password) {
 
 // get-me api
 export async function getMe() {
-  const response = await api.get("/get-me");
+  try {
+    const response = await api.get("/get-me");
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      return { user: null, unauthorized: true };
+    }
+    throw error;
+  }
+}
 
+// logout api
+export async function logout() {
+  const response = await api.post("/logout");
   return response.data;
 }
