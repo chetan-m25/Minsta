@@ -4,6 +4,17 @@ const bcrypt = require("bcrypt");
 
 const MIN_PASSWORD_LENGTH = 5;
 const MAX_PASSWORD_LENGTH = 15;
+const FOUR_DAYS_MS = 4 * 24 * 60 * 60 * 1000;
+
+function getTokenCookieOptions() {
+  return {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: FOUR_DAYS_MS,
+    path: "/",
+  };
+}
 
 function validatePasswordLength(password) {
   if (!password || password.length < MIN_PASSWORD_LENGTH) {
@@ -55,12 +66,12 @@ async function registerController(req, res) {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: "1d",
+      expiresIn: "4d",
     },
   );
 
   // Store token in cookies
-  res.cookie("token", token);
+  res.cookie("token", token, getTokenCookieOptions());
 
   res.status(201).json({
     message: "User Registered Successfully",
@@ -110,12 +121,12 @@ async function loginController(req, res) {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: "1d",
+      expiresIn: "4d",
     },
   );
 
   // Store token in cookies
-  res.cookie("token", token);
+  res.cookie("token", token, getTokenCookieOptions());
 
   res.status(200).json({
     message: "User LoggedIn Successfully",
@@ -146,8 +157,23 @@ async function getMeController(req, res) {
   });
 }
 
+// Controller for user logout
+async function logoutController(req, res) {
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+  });
+
+  res.status(200).json({
+    message: "User logged out successfully",
+  });
+}
+
 module.exports = {
   registerController,
   loginController,
   getMeController,
+  logoutController,
 };
