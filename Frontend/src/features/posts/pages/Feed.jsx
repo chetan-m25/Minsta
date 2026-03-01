@@ -23,8 +23,30 @@ const Feed = () => {
 
   if (loading) {
     return (
-      <main>
-        <h1>Loading...</h1>
+      <main className="feed-page">
+        <Navbar />
+        <div className="feed">
+          <div className="posts">
+            {[1, 2].map((item) => (
+              <div key={item} className="post-skeleton">
+                <div className="skeleton-user">
+                  <div className="skeleton-avatar shimmer"></div>
+                  <div className="skeleton-username shimmer"></div>
+                </div>
+
+                <div className="skeleton-image shimmer"></div>
+
+                <div className="skeleton-actions">
+                  <div className="skeleton-icon shimmer"></div>
+                  <div className="skeleton-icon shimmer"></div>
+                  <div className="skeleton-icon shimmer"></div>
+                </div>
+
+                <div className="skeleton-caption shimmer"></div>
+              </div>
+            ))}
+          </div>
+        </div>
       </main>
     );
   }

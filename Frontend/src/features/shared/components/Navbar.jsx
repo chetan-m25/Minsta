@@ -37,6 +37,10 @@ const Navbar = () => {
     }
   };
 
+  const handleReelsClick = () => {
+    window.location.href = "https://reelsdemo.netlify.app/";
+  };
+
   return (
     <nav className="navbar">
       <div className="left">
@@ -48,8 +52,12 @@ const Navbar = () => {
           <i className="ri-search-line nav-icon"></i>
           <span>Search</span>
         </button>
+        <button onClick={handleReelsClick} className="tooltip">
+          <i className="ri-video-line nav-icon"></i>
+          <span>Reels</span>
+        </button>
         <button onClick={() => navigate("/create-post")} className="tooltip">
-          <i className="ri-image-add-line nav-icon"></i>
+          <i class="ri-upload-cloud-line nav-icon"></i>
           <span>Create Post</span>
         </button>
         <div className="profile-dropdown-container" ref={dropdownRef}>
