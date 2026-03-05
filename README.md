@@ -1,51 +1,99 @@
 # Minsta 📸  
-A Full-Stack Social Media Application
+### A Full Stack Social Media Platform
 
-Minsta is a full-stack social media web application built using the MERN stack.  
-It was developed as part of my backend and frontend learning journey, focusing on real world architecture, authentication, and scalable code structure.
+![React](https://img.shields.io/badge/Frontend-React-blue)
+![Node.js](https://img.shields.io/badge/Backend-Node.js-green)
+![Express](https://img.shields.io/badge/Framework-Express-black)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-darkgreen)
+![JWT](https://img.shields.io/badge/Auth-JWT-orange)
+![ImageKit](https://img.shields.io/badge/Storage-ImageKit-blueviolet)
+![Status](https://img.shields.io/badge/Status-Production-success)
+
+Minsta is a full stack social media web application built using a modern MERN stack architecture.  
+The project focuses on implementing real world backend architecture, secure authentication systems, scalable data models, and a structured frontend application.
+
+Minsta replicates core social media functionality including post creation, user interactions, authentication, and media uploads.
 
 ---
 
-## 🚀 Live Deployment
+# 🌐 Live Deployment
 
 Frontend (Vercel)  
 https://minsta-social.vercel.app/
 
-Backend (Railway)  
-https://minsta.up.railway.app/
+Backend (Render)  
+https://minsta-api-server.onrender.com
 
 ---
 
-## 🧠 Project Overview
+# Project Overview
 
-Minsta replicates core social media functionality including:
+Minsta demonstrates how modern social media platforms manage authentication, content creation, and user interactions using a scalable full stack architecture.
 
-- User Authentication (Register / Login)
-- JWT based Secure Sessions
-- Create / Read Posts
-- Like Posts
-- Save Posts
-- Follow / Unfollow Users
-- Protected Routes
-- Context based State Management (Frontend)
+Core platform capabilities include:
 
-The project emphasizes clean architecture, separation of concerns, and scalable backend structure.
+- User authentication system
+- Post creation and feed generation
+- Follow / unfollow functionality
+- Like and save features
+- Media upload handling
+- Secure session management
+- Context based frontend state management
+
+The project emphasizes clean architecture, modular backend structure, and scalable frontend design.
 
 ---
 
-# 🏗️ Architecture Overview
+# System Architecture
 
-## Backend Structure (Node.js + Express)
+```
+                ┌──────────────┐
+                │   Frontend   │
+                │ React (Vite) │
+                └──────┬───────┘
+                       │
+                       │ API Requests
+                       ▼
+               ┌───────────────┐
+               │   Node.js API │
+               │  Express App  │
+               └──────┬────────┘
+                      │
+        ┌─────────────┼─────────────┐
+        ▼             ▼             ▼
+     MongoDB       ImageKit        JWT
+ (Users & Posts)  (Media CDN)   (Auth Tokens)
+        │
+        ▼
+   Social Interaction System
+```
 
-The backend follows a controller based architecture:
+### Architecture Explanation
 
-- Routes → Define endpoints
-- Controllers → Handle business logic
-- Models → Define database schemas
-- Middleware → Authentication & error handling
-- Config → Database connection
+- **React frontend** communicates with backend APIs
+- **Express server** handles authentication, posts, follows, and interactions
+- **MongoDB** stores users, posts, and relationship data
+- **ImageKit** stores uploaded images
+- **JWT authentication** secures user sessions
+
+---
+
+# Backend Architecture
+
+The backend follows a **controller based architecture** for scalability and maintainability.
+
+Structure layers:
+
+```
+routes → API endpoints
+controllers → business logic
+models → database schemas
+middleware → authentication & error handling
+config → database connection
+```
 
 ### Folder Structure
+
 ```
 Backend/
 │
@@ -82,41 +130,61 @@ Backend/
 
 ---
 
-## 🔐 Authentication System
+# Authentication System
 
-- Passwords are hashed using SHA-256 before storage
-- JWT tokens are generated upon login/register
-- Tokens are stored in cookies
-- Auth middleware verifies token for protected routes
-- “Get Me” endpoint returns authenticated user details
+Minsta implements a secure authentication system using JWT.
 
-Security Improvements Implemented:
-- No plain text passwords
-- Token expiration
+Features include:
+
+- User registration
+- Secure login system
+- Password hashing using SHA-256
+- JWT based authentication
+- Token stored in cookies
+- Protected API routes
+- User verification middleware
+
+Security improvements include:
+
+- No plain text password storage
+- Token expiration support
 - Middleware based route protection
 
 ---
 
-## 📦 Database Design (MongoDB)
+# Database Design
 
-Models Used:
+The application uses MongoDB with Mongoose models.
 
-- User → Stores user credentials & profile info
-- Post → Stores user generated posts
-- Follow → Manages follow relationships
-- Like → Tracks post likes
-- Save → Stores saved posts
+### Models Used
 
-This relational structure allows:
+**User**
+: Stores user credentials and profile information.
+
+**Post**
+: Stores user generated posts and media.
+
+**Follow**
+: Maintains follow relationships between users.
+
+**Like**
+: Tracks user likes on posts.
+
+**Save**
+: Stores saved posts for users.
+
+This structure allows:
+
 - Feed generation
-- User interaction tracking
+- Social interactions
+- Efficient relational modeling
 - Scalable expansion
 
 ---
 
-# 🎨 Frontend Structure (React + Vite)
+# Frontend Architecture
 
-Frontend follows a feature based architecture:
+The frontend follows a **feature based architecture** to maintain scalability.
 
 ```
 Frontend/
@@ -139,7 +207,7 @@ Frontend/
 │   │   │
 │   │   └── shared/
 │   │       ├── components/
-│   │       └── style/
+│   │       └── styles/
 │   │
 │   ├── App.jsx
 │   ├── app.routes.jsx
@@ -148,91 +216,96 @@ Frontend/
 
 ---
 
-## 🧠 Frontend Concepts Implemented
+# Frontend Concepts Implemented
 
-- Context API for Auth and Posts
-- Custom Hooks (useAuth, usePost)
-- Centralized API Layer
-- Protected Routing
-- Feature based folder structure
+- React Context API for state management
+- Custom hooks (useAuth, usePost)
+- Centralized API services
+- Protected routes
+- Feature based modular structure
 - SCSS modular styling
 
 ---
 
-# 🔄 Core Functional Flow
+# Core Functional Flow
 
-## Register
+## User Registration
 1. User submits credentials
 2. Backend hashes password
 3. JWT token generated
 4. Token stored in cookie
 
 ## Login
-1. User submits email/password
-2. Password hash validated
-3. JWT generated
-4. Session established
+1. User submits login credentials
+2. Password validation occurs
+3. JWT token generated
+4. User session established
 
 ## Post Creation
-1. Authenticated user creates post
-2. Stored in MongoDB
-3. Feed updates via context
-
-## Image Upload Handling
-- Integrated ImageKit for handling image uploads
-- Images are uploaded to ImageKit instead of storing them locally
-- Keeps backend lightweight and scalable
+1. Authenticated user uploads post
+2. Media uploaded to ImageKit
+3. Post stored in MongoDB
+4. Feed updates dynamically
 
 ## Follow System
-- Users can follow/unfollow others
-- Relationship stored in Follow model
+Users can follow and unfollow other users.
 
-## Like & Save
-- Likes stored in Like model
-- Saved posts stored in Save model
+Relationships are stored using the Follow model.
+
+## Like & Save System
+
+Users can:
+
+- Like posts
+- Save posts
+- Retrieve saved posts later
 
 ---
 
 # 🛠️ Tech Stack
 
-Backend:
+### Frontend
+- React
+- Vite
+- SCSS
+- Context API
+- Custom Hooks
+
+### Backend
 - Node.js
 - Express.js
 - MongoDB
 - Mongoose
-- JWT
+- JWT Authentication
 - Cookie Parser
-- ImageKit (for image uploads & media storage)
 
-Frontend:
-- React
-- Vite
-- Context API
-- Custom Hooks
-- SCSS
+### Media Storage
+- ImageKit CDN
 
-Deployment:
-- Railway (Backend)
+### Deployment
 - Vercel (Frontend)
+- Render (Backend)
 
 ---
 
-# 📈 Key Learning Outcomes
+# Key Learning Outcomes
 
-While building Minsta, I strengthened my understanding of:
+While building Minsta, the following concepts were applied and strengthened:
 
-- Full-stack architecture
+- Full stack system architecture
 - Secure authentication systems
 - REST API design
 - Controller based backend structure
-- State management using Context API
-- Feature based frontend organization
-- Deployment workflows
-- Production ready folder structure
+- Context API state management
+- Feature based frontend architecture
+- Media upload handling
+- Cloud deployment workflows
+- Production ready project structure
 
 ---
 
-# 🏁 Final Note
+# Final Note
 
-Minsta is a learning driven full-stack project built with a strong focus on structure, scalability, and security practices.  
-It represents practical implementation of authentication, relational data modeling, and frontend-backend integration.
+Minsta represents a learning driven full stack social media platform built with a focus on scalable architecture, secure authentication, and modular project structure.
+
+The project demonstrates practical implementation of real world backend systems and modern frontend application design.
